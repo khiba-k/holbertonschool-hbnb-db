@@ -1,0 +1,73 @@
+{
+    "users": {
+        "user_id": {
+            "first_name": None
+            "last_name": None
+            "email": None
+            "password": None
+            "places": {
+                "place_name": {
+                    "place_id": None
+                    "description": None
+                    "address": None
+                    "host_id": None
+                    "country": None
+                    "city": None
+                    "latitude": None
+                    "longitude": None
+                    "number_of_rooms": None
+                    "bathrooms": None
+                    "price_per_night": None
+                    "max_guests": None
+                    "amenities": [None]
+                },
+
+                "place_name": {
+                    "place_id": None
+                    "description": None
+                    "address": None
+                    "host_id": None
+                    "country": None
+                    "city": None
+                    "latitude": None
+                    "longitude": None
+                    "number_of_rooms": None
+                    "bathrooms": None
+                    "price_per_night": None
+                    "max_guests": None
+                    "amenities": [None]
+                }
+            }
+            "created_at": None
+        }
+    }
+
+    "countries: {
+        "country_code": {
+            "country_code": None
+            "country_name": None
+            "cities": {
+                "city_name": {
+                    "country_code": None
+                    "city_name": None
+                    "id": None
+                    "created_at": None
+                    "updated_at": None
+                }
+            }
+        }
+    }
+
+    "Reviews": {
+        "id": None
+        "name_of_reviewer": None
+        "place_name": None
+        "comment": None
+        "Ratings": None
+        "created_at": None
+        "updated_at": None
+    }
+
+    "list_of_places": [None]
+    "list_of_amenities": [None]
+}
