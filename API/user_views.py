@@ -16,6 +16,18 @@ from Model.user import User
 from Persistance.data_management import DataManager
 
 
+def user_login(data):
+    email = data.get('email')
+    password =  data.get('password')
+
+    data_manager = DataManager()
+    user_id = data_manager.get("emails",{}).get(email)
+
+    if user_id:
+        get_pass = data_manager("users", {})
+    users_data = data_manager.get("users")
+
+
 
 def create_user(data):
     """Create new user

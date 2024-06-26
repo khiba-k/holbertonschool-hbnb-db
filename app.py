@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
-from API.user_views import create_user, get_all_users, get_specific_user, update_user, delete_user
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, get_current_user, jwt_required
+from API.user_views import create_user, get_all_users, get_specific_user, update_user, delete_user, user_login
 from API.amenities_views import create_amenity, get_amenities, get_amenity, update_amenity, delete_amenity
 from API.country_api import get_all_countries, get_country, get_country_cities
 from API.city_api import create_city, get_all_cities, get_specific_city, update_city, delete_city
@@ -18,6 +19,10 @@ User routes
 """
 
 # Users Routes
+@app.route ('/login', methods=['POST'])
+def login():
+    return user_login(request.get_json)
+
 @app.route('/users', methods=['POST'])
 def user():
     return create_user(request.get_json())
