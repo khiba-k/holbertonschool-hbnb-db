@@ -1,7 +1,8 @@
-#!/usr/bin/python3
-from base_model import BaseModel
+from create_app_db import db
+# from base_model import BaseModel
+from datetime import datetime
 
-class Amenity(BaseModel):
+class Amenity(db.Model):
     def __init__(self, name):
         super().__init__()
         self.name = name

@@ -1,37 +1,33 @@
 #!/usr/bin/python3
 from place import Place
 from user import User
-
+from create_app_db import db
 from base_model import BaseModel
 from datetime import datetime
 
-class Review(BaseModel):
-    def __init__(self, user_id, place_id, comment, rating):
-        """Initialize a new Review instance."""
-        super().__init__()
-        self.user_id = user_id
-        self.place_id = place_id
-        # self.name = name
-        self.comment = comment
-        self.ratings = rating
-        self.review_id = self.id
+class Review(db.Model):
+    user_id = ""
+    place_id = ""
+    # self.name = name
+    comment = db.Column(db.String(50))
+    ratings = db.Column(db.Integer)
+    review_id = db.Column(db.Integer, unique=True)
+    created_at = db.Column(db.Date, datetime.now)
 
     def save(self):
         """Save the review only if the user is not the host of the place."""
         if self.user_id == self.place_id.host_id:
             raise ValueError("Host cannot review their own place.")
-        super().save()
 
     def to_dict(self):
         """Return a dictionary representation of the Review instance."""
-        base_dict = super().to_dict()
-        base_dict.update({
+        dict = {
             'user_id': self.user_id,
             'place_id': self.place_id,
             'comment': self.comment,
             'ratings': self.ratings,
-            'created_at': self.created_at.isoformat(),
-            'updated_at': self.updated_at.isoformat(),
+            'created_at': self.created_at,
+            # 'updated_at': self.updated_at,
             'id': self.review_id
-        })
-        return base_dict
+        }
+        return dict

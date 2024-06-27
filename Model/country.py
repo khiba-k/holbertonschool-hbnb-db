@@ -1,31 +1,35 @@
 #!/usr/bin/python3
-from base_model import BaseModel
-from cities import Cities
-from Persistance.data_management import DataManager as DM
+# from base_model import BaseModel
+# from cities import Cities
+# from Persistance.data_management import DataManager as DM
+# from datetime import datetime
+# from create_app_db import db
 
-class Country(BaseModel):
-    def __init__(self, country_name):
-        super().__init__()
-        self.country_name = country_name
-        self.cities = []
+# class Country(db.Model):
+#     country_name = db.Column(db.String(50), unique=True)
+#     cities = []
 
-    def add_city(self, city):
-        if isinstance(city, Cities) and city.city_name not in [c.city_name for c in self.cities]:
-            self.cities.append(city)
+#     def add_city(self, city):
+#         if isinstance(city, Cities) and city.city_name not in [c.city_name for c in self.cities]:
+#             self.cities.append(city)
 
-    def get_cities(self):
-        return self.cities
+#     def get_cities(self):
+#         return self.cities
 
-    def get_country_name(self):
-        return self.country_name
+#     def get_country_name(self):
+#         return self.country_name
 
-    def to_dict(self):
-        base_dict = super().to_dict()
-        base_dict.update({
-            "country": self.country_name,
-            "cities": [city.to_dict() for city in self.cities]
-        })
-        return base_dict
+#     def to_dict(self):
+#         base_dict = super().to_dict()
+#         base_dict.update({
+#             "country": self.country_name,
+#             "cities": [city.to_dict() for city in self.cities]
+#         })
+#         return base_dict
+
+"""
+recheck
+"""
     
     
 

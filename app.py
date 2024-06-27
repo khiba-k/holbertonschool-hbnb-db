@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, get_current_user, jwt_required
 from API.user_views import create_user, get_all_users, get_specific_user, update_user, delete_user, user_login
@@ -8,6 +9,19 @@ from API.places_views import create_place, get_places, get_place, update_place, 
 from API.reviews_views import create_review_for_place, get_reviews_by_user, get_reviews_for_place, get_review, update_review, delete_review
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///hbnb_db.sqlite3"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+
+# Initialize the database
+from create_app_db import db, init_db
+init_db(app)
+
+if os.path.exists("hbnb_db.sqlite3"):
+    pass
+else:
+    with app.app_context():
+        db.create_all()
 
 # App index
 @app.route('/')

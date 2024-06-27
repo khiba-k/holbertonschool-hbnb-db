@@ -1,6 +1,8 @@
 from base_model import BaseModel
+from datetime import datetime
+from create_app_db import db
 
-class Cities(BaseModel):
+class Cities(db.Model):
     """
     Defines city
     """

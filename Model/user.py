@@ -3,9 +3,11 @@
 import bcrypt
 from base_model import BaseModel
 from Persistance.data_management import DataManager
+from datetime import datetime
+from create_app_db import db
 
 
-class User:
+class User(db.Model):
     """Handles the users information
 
     Attributes:
