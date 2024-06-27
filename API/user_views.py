@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 from flask import jsonify
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, get_current_user, jwt_required
 import sys
 import os
+import bcrypt
 
 # Get the directory containing this script
 current_dir = os.path.dirname(__file__)
@@ -21,11 +23,19 @@ def user_login(data):
     password =  data.get('password')
 
     data_manager = DataManager()
-    user_id = data_manager.get("emails",{}).get(email)
+    all_emails = data_manager.get("emails")
+    user_id = next((key for key, value in all_emails.items() if value == email), None)
 
     if user_id:
-        get_pass = data_manager("users", {})
-    users_data = data_manager.get("users")
+        specific_user = data_manager.get("users", user_id)
+        get_pass = specific_user.get("password")
+
+        if  bcrypt.checkpw(password.encode('utf-8'), get_pass):
+            access_token = create_access_token(user_id)
+            return jsonify(access_token=access_token)
+        return "Invalid Password"
+    return "Email Does Not Exist" #Redirect to create user
+
 
 
 
