@@ -2,10 +2,7 @@
 module for defining a place
 """
 
-from country import Country
-# from base_model import BaseModel
-from Model.country import Country
-from datetime import datetime
+from datetime import datetime, timezone
 from create_app_db import db
 
 class Place(db.Model):
@@ -22,20 +19,19 @@ class Place(db.Model):
     host_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     country = db.Column(db.String(50), nullable=False)
     city = db.Column(db.String(50), nullable=False)
-    latitude = db.Column(db.Integer, nullable=False)
-    longitude = db.Column(db.Integer, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
     number_of_rooms = db.Column(db.Integer, nullable=False)
     bathrooms = db.Column(db.Integer, nullable=False)
     price_per_night = db.Column(db.Integer, nullable=False)
     max_guests = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.Date, default=datetime.now)
+    created_at = db.Column(db.DateTime, default=datetime.now(tz=timezone.utc))
     # Relationships
     amenities = db.relationship('Amenity', secondary='place_amenity', backref=db.backref('places', lazy='dynamic'))
 
     def to_dict(self):
         """Return a dictionary representation of the Place instance."""
-        base_dict = super().to_dict()
-        base_dict.update({
+        return {
             'place_name': self.place_name,
             'description': self.description,
             'address': self.address,
@@ -49,10 +45,9 @@ class Place(db.Model):
             'bathrooms': self.bathrooms,
             'price_per_night': self.price_per_night,
             'max_guests': self.max_guests,
-            'amenities': self.amenities,
+            'amenities': [amenity.to_dict() for amenity in self.amenities],
             'created_at': str(self.created_at)
-        })
-        return base_dict
+        }
 
     def __repr__(self) -> str:
         return f"<Place: {self.place_name}>"

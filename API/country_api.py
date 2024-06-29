@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 import sys
 import os
+from create_app_db import db
 
 # Get the directory containing this script
 current_dir = os.path.dirname(__file__)
@@ -16,7 +17,11 @@ from flask import Flask, jsonify, request
 import requests
 from geopy.geocoders import Nominatim
 
-class Country:
+class Country(db.Model):
+    __tablename__ = 'Countries'
+    name = db.Column(db.String(50))
+    alpha2Code = db.Column(db.String(50), primary_key=True)
+    
     def __init__(self, name, alpha2Code):
         self.name = name
         self.alpha2Code = alpha2Code

@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """Defines class for User entity"""
 import bcrypt
-from base_model import BaseModel
+# from base_model import BaseModel
 from Persistance.data_management import DataManager
-from datetime import datetime
+from datetime import datetime, timezone
 from create_app_db import db
 
 
@@ -13,12 +13,26 @@ class User(db.Model):
     Attributes:
         emails []: Has all the existing emails in the system
         user_places []: Has list of the places the user is hosting
-        user_details {}: Dictionery containing users information 
+        user_details {}: Dictionary containing users information 
+        firstName (string): users first name
+        lastName (string): users last name
+        password (string): users password
+        email (string): users email 
     """
+
+    __tablename__ = 'user'
+
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    firstName = db.Column(db.String(50), nullable=False)
+    lastName = db.Column(db.String(50), nullable=False)
+    _password = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(50), nullable=False, unique=True)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(tz=timezone.utc))
 
     emails = []
     user_places = []
     users = {}
+
 
     def __init__(self, firstName, lastName, password, email):
         """Method initializes the User Class instance
@@ -30,13 +44,10 @@ class User(db.Model):
             email (string): users email
         """
 
-        self.stamps = BaseModel()
-        self.user_id = self.stamps.id
         self.firstName = firstName
         self.lastName = lastName
-        self.__password = self.hash_password(password)
+        self._password = password
         self.email = email
-        self.created_at = str(self.stamps.created_at)
 
     def hash_password(self, password):
         """Hashes a password using bcrypt.
@@ -59,7 +70,7 @@ class User(db.Model):
             "first_name": self.firstName,
             "last_name": self.lastName,
             "email": self.email,
-            "password": self.__password,
+            # "password": self.__password,
             "created_at": self.created_at
         }
         return data
