@@ -29,6 +29,11 @@ class Place(db.Model):
     # Relationships
     amenities = db.relationship('Amenity', secondary='place_amenity', backref=db.backref('places', lazy='dynamic'))
 
+    def save_to_db(self):
+        """Saves the user information to the database."""
+        db.session.add(self)
+        db.session.commit()
+
     def to_dict(self):
         """Return a dictionary representation of the Place instance."""
         return {

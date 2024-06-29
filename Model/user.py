@@ -49,6 +49,11 @@ class User(db.Model):
         self._password = password
         self.email = email
 
+    def save_to_db(self):
+        """Saves the user information to the database."""
+        db.session.add(self)
+        db.session.commit()
+
     def hash_password(self, password):
         """Hashes a password using bcrypt.
 

@@ -21,10 +21,15 @@ class Country(db.Model):
     __tablename__ = 'Countries'
     name = db.Column(db.String(50))
     alpha2Code = db.Column(db.String(50), primary_key=True)
-    
+
     def __init__(self, name, alpha2Code):
         self.name = name
         self.alpha2Code = alpha2Code
+
+    def save_to_db(self):
+        """Saves the user information to the database."""
+        db.session.add(self)
+        db.session.commit()
 
     @staticmethod
     def get_all_countries():

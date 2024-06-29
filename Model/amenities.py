@@ -12,6 +12,11 @@ class Amenity(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(tz=timezone.utc))
     updated_at = db.Column(db.DateTime, nullable=True)
 
+    def save_to_db(self):
+        """Saves the user information to the database."""
+        db.session.add(self)
+        db.session.commit()
+
     def to_dict(self):
         return {
             'id': self.id,
