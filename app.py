@@ -7,22 +7,28 @@ from API.country_api import get_all_countries, get_country, get_country_cities
 from API.city_api import create_city, get_all_cities, get_specific_city, update_city, delete_city
 from API.places_views import create_place, get_places, get_place, update_place, delete_place
 from API.reviews_views import create_review_for_place, get_reviews_by_user, get_reviews_for_place, get_review, update_review, delete_review
+from config import SQLiteConfig, PostgreSQLConfig
+from create_app_db import db, init_db
+
+config_name = os.getenv('FLASK_CONFIGURATION', 'SQLiteConfig')
+
+config_map = {
+    'SQLiteConfig': SQLiteConfig,
+    'PostgreSQLConfig': PostgreSQLConfig
+}
+
+"""Export environment variables to set the configuration"""
+# export FLASK_CONFIGURATION=SQLiteConfig
+# export FLASK_CONFIGURATION=PostgreSQLConfig
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///hbnb_db.sqlite3"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config.from_object(config_map[config_name])
 
-
-# Initialize the database
-from create_app_db import db, init_db
 init_db(app)
 
-if os.path.exists("hbnb_db.sqlite3"):
-    pass
-else:
+if config_name == 'SQLiteConfig' and not os.path.exists("hbnb_db.sqlite3"):
     with app.app_context():
         db.create_all()
-
 # App index
 @app.route('/')
 def home():

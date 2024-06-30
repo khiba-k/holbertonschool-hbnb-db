@@ -1,33 +1,45 @@
 #!/usr/bin/python3
+from datetime import datetime, timezone
+from create_app_db import db
 from place import Place
 from user import User
-from create_app_db import db
-from base_model import BaseModel
-from datetime import datetime
 
 class Review(db.Model):
-    user_id = ""
-    place_id = ""
-    # self.name = name
-    comment = db.Column(db.String(50))
-    ratings = db.Column(db.Integer)
-    review_id = db.Column(db.Integer, unique=True)
-    created_at = db.Column(db.Date, datetime.now)
+    """
+    Defines a review.
+    """
+    __tablename__ = 'review'
 
-    def save(self):
-        """Save the review only if the user is not the host of the place."""
-        if self.user_id == self.place_id.host_id:
-            raise ValueError("Host cannot review their own place.")
+    review_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    place_id = db.Column(db.Integer, db.ForeignKey('place.place_id'), nullable=False)
+    comment = db.Column(db.String(1024), nullable=False)
+    ratings = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now(tz=timezone.utc))
+
+    # def save(self):
+    #     """Save the review only if the user is not the host of the place."""
+    #     place = Place.query.get(self.place_id)
+    #     if self.user_id == place.host_id:
+    #         raise ValueError("Host cannot review their own place.")
+    #     db.session.add(self)
+    #     db.session.commit()
+
+    def save_to_db(self):
+        """Saves the user information to the database."""
+        db.session.add(self)
+        db.session.commit()
 
     def to_dict(self):
         """Return a dictionary representation of the Review instance."""
-        dict = {
+        return {
+            'review_id': self.review_id,
             'user_id': self.user_id,
             'place_id': self.place_id,
             'comment': self.comment,
             'ratings': self.ratings,
-            'created_at': self.created_at,
-            # 'updated_at': self.updated_at,
-            'id': self.review_id
+            'created_at': str(self.created_at)
         }
-        return dict
+
+    def __repr__(self) -> str:
+        return f"<Review: {self.review_id}>"
