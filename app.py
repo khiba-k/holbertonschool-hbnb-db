@@ -23,6 +23,11 @@ config_map = {
 
 app = Flask(__name__)
 app.config.from_object(config_map[config_name])
+app.config["JWT_SECRET_KEY"] = "abc123$"
+app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+app.config["JWT_COOKIE_SECURE"] = False
+app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
+jwt = JWTManager(app)
 
 init_db(app)
 

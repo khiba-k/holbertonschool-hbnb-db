@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from flask import jsonify
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, get_current_user, jwt_required
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, get_current_user, jwt_required, set_access_cookies, unset_jwt_cookies
 import sys
 import os
 import bcrypt
@@ -31,10 +31,11 @@ def user_login(data):
         get_pass = specific_user.get("password")
 
         if  bcrypt.checkpw(password.encode('utf-8'), get_pass):
-            access_token = create_access_token(user_id)
-            return jsonify(access_token=access_token)
-        return "Invalid Password"
-    return "Email Does Not Exist" #Redirect to create user
+            access_token = create_access_token(identity=user_id)
+            response = jsonify({"message": "Login successful"})
+            set_access_cookies(response, access_token)
+            return response, 200
+    return "Invalid Login", 401 #Redirect to create user
 
 
 
