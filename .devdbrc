@@ -1,0 +1,6 @@
+[
+  {
+    "type": "sqlite",
+    "path": "/home/khibakoenane/hbnb-db/main/holbertonschool-hbnb-db/instance/hbnb_db.db"
+  }
+]

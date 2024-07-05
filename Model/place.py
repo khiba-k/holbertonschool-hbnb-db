@@ -4,6 +4,7 @@ module for defining a place
 
 from datetime import datetime, timezone
 from create_app_db import db
+from sqlalchemy.dialects.postgresql import JSON
 
 class Place(db.Model):
     """
@@ -16,7 +17,7 @@ class Place(db.Model):
     place_name = db.Column(db.String(50), nullable=False, unique=True)
     description = db.Column(db.String(1024), nullable=False)
     address = db.Column(db.String(50), nullable=False)
-    host_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    host_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     country = db.Column(db.String(50), nullable=False)
     city = db.Column(db.String(50), nullable=False)
     latitude = db.Column(db.Float, nullable=False)
@@ -27,7 +28,7 @@ class Place(db.Model):
     max_guests = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(tz=timezone.utc))
     # Relationships
-    amenities = db.relationship('Amenity', secondary='place_amenity', backref=db.backref('places', lazy='dynamic'))
+    amenities = db.Column(JSON, db.ForeignKey('amenity.id'))
 
     def save_to_db(self):
         """Saves the user information to the database."""

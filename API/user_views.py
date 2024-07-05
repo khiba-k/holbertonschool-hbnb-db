@@ -51,6 +51,7 @@ def create_user(data):
     
     new_user = User(first_name, last_name, password, email)
     result = new_user.save_to_file()
+    new_user.save_to_db()
 
     if result == "Email already exists":
         return jsonify({"error": "Email already exists"}), 400

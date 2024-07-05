@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 from create_app_db import db
+# from association_table import place_amenity
 
 class Amenity(db.Model):
     """
