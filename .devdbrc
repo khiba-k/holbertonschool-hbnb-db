@@ -2,5 +2,9 @@
   {
     "type": "sqlite",
     "path": "/home/khibakoenane/hbnb-db/main/holbertonschool-hbnb-db/instance/hbnb_db.db"
+  },
+  {
+    "type": "sqlite",
+    "path": "/home/khiba/Desktop/Programming/holbertonschool-hbnb-db/main/holbertonschool-hbnb-db/instance/hbnb_db.db"
   }
 ]

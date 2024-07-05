@@ -16,26 +16,46 @@ sys.path.append(model_path)
 
 from Model.user import User
 from Persistance.data_management import DataManager
+from create_app_db import db
 
 
 def user_login(data):
     email = data.get('email')
     password =  data.get('password')
 
-    data_manager = DataManager()
-    all_emails = data_manager.get("emails")
-    user_id = next((key for key, value in all_emails.items() if value == email), None)
+    #Using SQLAlchemy
 
-    if user_id:
-        specific_user = data_manager.get("users", user_id)
-        get_pass = specific_user.get("password")
+    user = db.session.query(User).filter_by(email=email).first()
 
-        if  bcrypt.checkpw(password.encode('utf-8'), get_pass):
-            access_token = create_access_token(identity=user_id)
+    if user:
+
+        if  bcrypt.checkpw(password.encode('utf-8'), user._password.encode('utf-8')):
+            admin = user.is_admin
+            role_dict = {
+            'roles': ['admin'] if admin else ['user']}
+            access_token = create_access_token(identity=user.user_id, additional_claims=role_dict)
             response = jsonify({"message": "Login successful"})
-            set_access_cookies(response, access_token)
+            set_access_cookies(response, access_token, secure=True, samesite='None')
             return response, 200
-    return "Invalid Login", 401 #Redirect to create user
+        return "Invalid Password"
+    return "Invalid Email", 401
+        
+    #Using JSON File
+
+    # data_manager = DataManager()
+    # all_emails = data_manager.get("emails")
+    # user_id = next((key for key, value in all_emails.items() if value == email), None)
+
+    # if user_id:
+    #     specific_user = data_manager.get("users", user_id)
+    #     get_pass = specific_user.get("password")
+
+    #     if  bcrypt.checkpw(password.encode('utf-8'), get_pass):
+    #         access_token = create_access_token(identity=user_id)
+    #         response = jsonify({"message": "Login successful"})
+    #         set_access_cookies(response, access_token)
+    #         return response, 200
+    # return "Invalid Login", 401 #Redirect to create user
 
 
 
@@ -107,4 +127,3 @@ def delete_user(user_id):
     if result == "something went wrong":
         return jsonify({"message": "User not found"}), 404
     return jsonify({"message": "User deleted successfully"}), 200
-

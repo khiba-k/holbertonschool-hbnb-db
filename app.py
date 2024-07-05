@@ -46,7 +46,7 @@ User routes
 # Users Routes
 @app.route ('/login', methods=['POST'])
 def login():
-    return user_login(request.get_json)
+    return user_login(request.get_json())
 
 @app.route('/users', methods=['POST'])
 def user():
