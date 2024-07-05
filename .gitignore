@@ -1,3 +1,4 @@
 *__pycache__
 instance
 hbnb_db.sqlite3
+.venv
