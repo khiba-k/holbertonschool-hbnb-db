@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from flask import jsonify
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, get_current_user, jwt_required, set_access_cookies, unset_jwt_cookies
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, get_current_user, jwt_required, set_access_cookies, unset_jwt_cookies,create_access_token
 import sys
 import os
 import bcrypt
@@ -144,4 +144,3 @@ def delete_user(user_id):
     if result == "something went wrong":
         return jsonify({"message": "User not found"}), 404
     return jsonify({"message": "User deleted successfully"}), 200
-
