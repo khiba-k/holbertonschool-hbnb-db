@@ -34,6 +34,11 @@ class Place(db.Model):
         """Saves the user information to the database."""
         db.session.add(self)
         db.session.commit()
+    
+    def delete_from_db(self):
+        """Deletes the user information from the database."""
+        db.session.delete(self)
+        db.session.commit()
 
     def to_dict(self):
         """Return a dictionary representation of the Place instance."""

@@ -19,12 +19,22 @@ class Cities(db.Model):
     """
 
     city_name = db.Column(db.String(50))
-    country = db.Column(db.String(50))
+    country = db.Column(db.String(50), db.ForeignKey("Countries.alpha2Code"))
     id = db.Column(db.Integer, primary_key=True)
 
     def __init__(self, city_name, country):
         self.city_name = city_name
         self.country = country
+
+    def save_to_db(self):
+        """Saves the user information to the database."""
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_from_db(self):
+        """Deletes the user information from the database."""
+        db.session.delete(self)
+        db.session.commit()
 
     def to_dict(self):
         # base_dict = super().to_dict()
