@@ -34,8 +34,8 @@ def user_login(data):
             role_dict = {
             'roles': ['admin'] if admin else ['user']}
             access_token = create_access_token(identity=user.user_id, additional_claims=role_dict)
-            response = jsonify({"message": "Login successful"})
-            set_access_cookies(response, access_token, secure=True, samesite='None')
+            response = jsonify({"message": "Login successful"}, access_token)
+            set_access_cookies(response, access_token)
             return response, 200
         return "Invalid Password"
     return "Invalid Email", 401
