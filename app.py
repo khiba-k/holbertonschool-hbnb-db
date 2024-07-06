@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, jsonify
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, get_current_user, jwt_required
+from flask_jwt_extended import JWTManager, get_jwt_identity, get_current_user, jwt_required
 from API.user_views import create_user, get_all_users, get_specific_user, update_user, delete_user, user_login
 from API.amenities_views import create_amenity, get_amenities, get_amenity, update_amenity, delete_amenity
 from API.country_api import get_all_countries, get_country, get_country_cities

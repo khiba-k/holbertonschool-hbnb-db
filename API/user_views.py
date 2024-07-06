@@ -4,6 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
 import sys
 import os
 import bcrypt
+from RU_db import get_data_from_db
 
 # Get the directory containing this script
 current_dir = os.path.dirname(__file__)
@@ -81,6 +82,7 @@ def get_all_users():
     """Retrieve all existing users"""
     data_manager = DataManager()
     users_data = data_manager.get("users")
+    
 
     if users_data:
         return jsonify(users_data), 200
@@ -123,7 +125,11 @@ def delete_user(user_id):
     data_manager = DataManager()
     result = data_manager.delete("users", user_id)
     data_manager.delete("emails", user_id)
+
+    user = get_data_from_db("user", user_id)
+    user.delete_from_db()
     
     if result == "something went wrong":
         return jsonify({"message": "User not found"}), 404
     return jsonify({"message": "User deleted successfully"}), 200
+
