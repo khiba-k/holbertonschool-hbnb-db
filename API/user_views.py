@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from flask import jsonify
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, get_current_user, jwt_required, set_access_cookies, unset_jwt_cookies
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, get_current_user, jwt_required, set_access_cookies, unset_jwt_cookies,create_access_token
 import sys
 import os
 import bcrypt
@@ -107,3 +107,8 @@ def delete_user(user_id):
         return jsonify({"message": "User not found"}), 404
     return jsonify({"message": "User deleted successfully"}), 200
 
+def login():
+    # authenticate user
+    additional_claims= {"is_admin": user.is_admin}
+    access_token = create_access_token(identify=user.id, additional_claims=additional_claims)
+    return jsonify(access_token=access_token)
