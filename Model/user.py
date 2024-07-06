@@ -82,7 +82,7 @@ class User(db.Model):
             "first_name": self.firstName,
             "last_name": self.lastName,
             "email": self.email,
-            # "password": self.__password,
+            "password": self.__password,
             "created_at": self.created_at
         }
         return data
@@ -103,6 +103,7 @@ class User(db.Model):
         
         data_manager.save("emails", self.email, None,  self.user_id)
         data_manager.save("users", self.to_dict(), None, self.user_id)
+
 
     def user_update(self):
         """Update user information in json file

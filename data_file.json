@@ -1,8 +1,16 @@
 {
-    "users": {},
-    "countries": {},
-    "reviews": {},
-    "places": [],
-    "amenities": [],
-    "emails": {}
+    "users": {
+        "1": {
+            "first_name": "Khiba",
+            "last_name": "Koenane",
+            "password": "MYOB",
+            "email": "khiba@gmail.com",
+            "user_id": "1",
+            "updated_at": ": {}",
+            "reviews": {},
+            "places": [],
+            "amenities": [],
+            "emails": {}
+        }
+    }
 }
