@@ -5,6 +5,7 @@ import sys
 import os
 import bcrypt
 from RU_db import get_data_from_db
+import secrets
 
 # Get the directory containing this script
 current_dir = os.path.dirname(__file__)
@@ -34,8 +35,13 @@ def user_login(data):
             admin = user.is_admin
             role_dict = {
             'roles': ['admin'] if admin else ['user']}
+            csrf_token = secrets.token_hex(16)
             access_token = create_access_token(identity=user.user_id, additional_claims=role_dict)
-            response = jsonify({"message": "Login successful"}, access_token)
+            response = jsonify({
+                "message": "Login successful",
+                "access_token": access_token,
+                "csrf_token": csrf_token
+            })
             set_access_cookies(response, access_token)
             return response, 200
         return "Invalid Password"
