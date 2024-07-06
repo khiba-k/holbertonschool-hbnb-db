@@ -51,16 +51,6 @@ class User(db.Model):
         self._password = self.hash_password(password)
         self.email = email
 
-    def save_to_db(self):
-        """Saves the user information to the database."""
-        db.session.add(self)
-        db.session.commit()
-    
-    def delete_from_db(self):
-        """Deletes the user information from the database."""
-        db.session.delete(self)
-        db.session.commit()
-
     def hash_password(self, password):
         """Hashes a password using bcrypt.
 
@@ -82,10 +72,15 @@ class User(db.Model):
             "first_name": self.firstName,
             "last_name": self.lastName,
             "email": self.email,
-            "password": self.__password,
+            "password": self._password,
             "created_at": self.created_at
         }
         return data
+    
+    def save_to_db(self):
+        """Saves the user information to the database."""
+        db.session.add(self)
+        db.session.commit()
     
     #json file data persistence
     def save_to_file(self):
@@ -110,6 +105,11 @@ class User(db.Model):
         """
         data_manager = DataManager()
         data_manager.update("users", self.to_dict(), None, self.user_id)
+
+    def delete_from_db(self):
+        """Deletes the user information from the database."""
+        db.session.delete(self)
+        db.session.commit()
 
     def delete_user(self):
         """Deletes user information from json file
