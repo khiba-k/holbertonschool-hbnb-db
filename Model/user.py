@@ -51,16 +51,6 @@ class User(db.Model):
         self._password = self.hash_password(password)
         self.email = email
 
-    def save_to_db(self):
-        """Saves the user information to the database."""
-        db.session.add(self)
-        db.session.commit()
-    
-    def delete_from_db(self):
-        """Deletes the user information from the database."""
-        db.session.delete(self)
-        db.session.commit()
-
     def hash_password(self, password):
         """Hashes a password using bcrypt.
 
@@ -82,42 +72,53 @@ class User(db.Model):
             "first_name": self.firstName,
             "last_name": self.lastName,
             "email": self.email,
-            # "password": self.__password,
+            "password": self._password,
             "created_at": self.created_at
         }
         return data
+    
+    def save_to_db(self):
+        """Saves the user information to the database."""
+        db.session.add(self)
+        db.session.commit()
     
     #json file data persistence
     def save_to_file(self):
         """Saves user information to json file
         """
         
-        # data_manager = DataManager()
-        # existing_emails = data_manager.get("emails")
+        data_manager = DataManager()
+        existing_emails = data_manager.get("emails")
 
-        # if "@gmail.com" not in self.email:
-        #     raise ValueError("Email has to include '@gmail.com'")
+        if "@gmail.com" not in self.email:
+            raise ValueError("Email has to include '@gmail.com'")
         
-        # if self.email in existing_emails.values():
-        #     return "Email already exists"
+        if self.email in existing_emails.values():
+            return "Email already exists"
         
-        # data_manager.save("emails", self.email, None,  self.user_id)
-        # data_manager.save("users", self.to_dict(), None, self.user_id)
+        data_manager.save("emails", self.email, None,  self.user_id)
+        data_manager.save("users", self.to_dict(), None, self.user_id)
+
 
     def user_update(self):
         """Update user information in json file
         """
-        # data_manager = DataManager()
-        # data_manager.update("users", self.to_dict(), None, self.user_id)
+        data_manager = DataManager()
+        data_manager.update("users", self.to_dict(), None, self.user_id)
+
+    def delete_from_db(self):
+        """Deletes the user information from the database."""
+        db.session.delete(self)
+        db.session.commit()
 
     def delete_user(self):
         """Deletes user information from json file
         """
-        # data_management = DataManager()
-        # email_delete_result = data_management.delete("users", self.user_id)
-        # user_delete_result = data_management.delete("emails", self.user_id)
+        data_management = DataManager()
+        email_delete_result = data_management.delete("users", self.user_id)
+        user_delete_result = data_management.delete("emails", self.user_id)
 
-        # return email_delete_result, user_delete_result
+        return email_delete_result, user_delete_result
 
     def __repr__(self) -> str:
         return f"<User: {self.user_id}>"

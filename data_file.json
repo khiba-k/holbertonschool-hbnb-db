@@ -1,6 +1,6 @@
 {
     "users": {
-        "5e18f27d756e4865a0e8bdc67e7e8a1b": {
+        "3": {
             "first_name": "Mike",
             "last_name": "Laury",
             "email": "badboy4life@gmail.com",
@@ -14,7 +14,7 @@
                     "place_name": "Cabin",
                     "description": "A cabin in the woods.",
                     "address": "123 Forest Maseu",
-                    "host_id": "5e18f27d756e4865a0e8bdc67e7e8a1b",
+                    "host_id": "3",
                     "country": "Lesotho",
                     "city": "Maseru",
                     "latitude": 52.52,
@@ -63,7 +63,7 @@
             "id": "ef20f9b8216f4e93b6981fe3da2d98d3",
             "created_at": "2024-06-16T21:33:55.511843",
             "updated_at": "2024-06-16T21:33:55.511847",
-            "user_id": "5e18f27d756e4865a0e8bdc67e7e8a1b",
+            "user_id": "3",
             "place_id": null,
             "comment": "This place was amazing!",
             "ratings": 5
@@ -99,7 +99,7 @@
             "place_name": "Cabin",
             "description": "A cabin in the woods.",
             "address": "123 Forest Maseu",
-            "host_id": "5e18f27d756e4865a0e8bdc67e7e8a1b",
+            "host_id": "3",
             "country": "Lesotho",
             "city": "Maseru",
             "latitude": 52.52,
@@ -117,6 +117,6 @@
     ],
     "amenities": [],
     "emails": {
-        "5e18f27d756e4865a0e8bdc67e7e8a1b": "badboy4life@gmail.com"
+        "3": "badboy4life@gmail.com"
     }
 }

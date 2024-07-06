@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, jsonify
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, get_current_user, jwt_required
+from flask_jwt_extended import JWTManager, get_jwt_identity, get_current_user, jwt_required, get_jwt
 from API.user_views import create_user, get_all_users, get_specific_user, update_user, delete_user, user_login
 from API.amenities_views import create_amenity, get_amenities, get_amenity, update_amenity, delete_amenity
 from API.country_api import get_all_countries, get_country, get_country_cities
@@ -53,20 +53,40 @@ def user():
     return create_user(request.get_json())
 
 @app.route('/users', methods=['GET'])
+@jwt_required()
 def get_users():
-    return get_all_users()
+    claims = get_jwt()
+    role = claims.get("roles")
+
+    if "admin" in role:
+        return get_all_users()
+    return jsonify({"error": "No authorization !"})
 
 @app.route('/users/<user_id>', methods=['GET'])
+@jwt_required()
 def speicfic_user(user_id):
-    return get_specific_user(user_id)
+    claims = get_jwt()
+    role = claims.get("roles")
+
+    if "admin" in role:
+        return get_specific_user(user_id)
+    return jsonify({"error": "No authorization !"})
+    
 
 @app.route('/users/<user_id>', methods=['PUT'])
+@jwt_required()
 def up_user(user_id):
     return update_user(user_id, request.get_json())
 
 @app.route('/users/<user_id>', methods=['DELETE'])
+@jwt_required()
 def del_user(user_id):
-    return delete_user(user_id)
+    claims = get_jwt()
+    role = claims.get("roles")
+    jwt_id = get_jwt_identity()
+
+    if "admin" in role or jwt_id == user_id:
+        return delete_user(user_id)
 
 """
 Amenity routes

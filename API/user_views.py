@@ -4,6 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
 import sys
 import os
 import bcrypt
+from RU_db import get_data_from_db
 
 # Get the directory containing this script
 current_dir = os.path.dirname(__file__)
@@ -82,6 +83,7 @@ def get_all_users():
     data_manager = DataManager()
     users_data = data_manager.get("users")
 
+
     if users_data:
         return jsonify(users_data), 200
     else:
@@ -99,14 +101,26 @@ def get_specific_user(user_id):
         return jsonify({"message": "User not found"}), 404
 
 def update_user(user_id, data):
-    data = data
-    data_manager = DataManager()
+    # Update in SQL database
+    user = get_data_from_db("user", user_id)
+
+    if not user:
+        return "User not found", 404
     
+    user.firstName = data.get('first_name', user.firstName)
+    user.lastName = data.get('last_name', user.lastName)
+    user._password = data.get('password', user._password)
+    user.email = data.get('email', user.email)
+
+    db.session.commit()
+
+    # Update in JSON file
+    data_manager = DataManager()
     existing_user = data_manager.get("users", user_id)
+    
     if not existing_user:
         return jsonify({"message": "User not found"}), 404
 
-     
     updated_user = User(
         firstName=data.get('first_name', existing_user['first_name']),
         lastName=data.get('last_name', existing_user['last_name']),
@@ -116,13 +130,16 @@ def update_user(user_id, data):
     updated_user.user_id = user_id
     updated_user.user_update()
     
-    return jsonify(updated_user.to_dict()), 200
+    return "User updated successfully", 200
 
 def delete_user(user_id):
     """Delete Data from JSON file"""
     data_manager = DataManager()
     result = data_manager.delete("users", user_id)
     data_manager.delete("emails", user_id)
+
+    user = get_data_from_db("user", user_id)
+    user.delete_from_db()
     
     if result == "something went wrong":
         return jsonify({"message": "User not found"}), 404
