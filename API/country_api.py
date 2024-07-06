@@ -31,6 +31,11 @@ class Country(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def delete_from_db(self):
+        """Deletes the user information from the database."""
+        db.session.delete(self)
+        db.session.commit()
+
     @staticmethod
     def get_all_countries():
         response = requests.get("https://restcountries.com/v3.1/all")

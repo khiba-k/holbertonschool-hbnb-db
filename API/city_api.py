@@ -21,7 +21,7 @@ def create_city():
     name = data.get('name')
     country_code = data.get('country_code')
     
-    new_city = cities(name, country_code)
+    new_city = cities.Cities(name, country_code)
     result = new_city.save_to_file()
 
     if result == "City already exists":
