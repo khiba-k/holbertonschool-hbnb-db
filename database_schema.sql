@@ -2,7 +2,6 @@ CREATE DATABASE IF NOT EXISTS hbtn_0e_6_usa;
 
 USE hbtn_0e_6_usa;
 
-
 -- Create the States table first
 CREATE TABLE States (
     id VARCHAR(36) PRIMARY KEY,

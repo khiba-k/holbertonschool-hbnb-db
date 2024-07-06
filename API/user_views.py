@@ -126,14 +126,4 @@ def delete_user(user_id):
     
     if result == "something went wrong":
         return jsonify({"message": "User not found"}), 404
-<<<<<<< HEAD
     return jsonify({"message": "User deleted successfully"}), 200
-=======
-    return jsonify({"message": "User deleted successfully"}), 200
-
-def login():
-    # authenticate user
-    additional_claims= {"is_admin": user.is_admin}
-    access_token = create_access_token(identify=user.id, additional_claims=additional_claims)
-    return jsonify(access_token=access_token)
->>>>>>> main
