@@ -121,7 +121,7 @@ def delete_review(self, review_id):
     return '', 204
 
 # curl -X POST \
-#   http://localhost:50000/places/aabd0f0e26e845e48ec9381ab18d8cba/reviews \
+#   http://localhost:5000/places/aabd0f0e26e845e48ec9381ab18d8cba/reviews \
 #   -H 'Content-Type: application/json' \
 #   -d '{
 #     "user_id": "5e18f27d756e4865a0e8bdc67e7e8a1b",

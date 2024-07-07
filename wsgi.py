@@ -5,4 +5,4 @@ from app import app
 # Then run the app
 # Please refere to the README file on how to change the app port
 if __name__ == "__main__":
-    app.run(host="120.0.0.1", port="50000")
+    app.run(host="120.0.0.1", port="5000")
