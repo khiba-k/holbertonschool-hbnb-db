@@ -2,6 +2,7 @@
 from Persistance import data_management as DM
 from Model import place
 from flask import jsonify
+from RU_db import get_data_from_db
 
 manipulate_data = DM.DataManager()
 entity_type = "places"
@@ -40,6 +41,7 @@ def create_place(req_data):
         data = place_obj.to_dict()
         manipulate_data.save(entity_type, data, place_obj.host_id, place_obj.place_name)
         manipulate_data.save(entity_type, data)
+        place_obj.save_to_db()
         
         return jsonify({"message": "Place created successfully."}), 201
 
@@ -52,9 +54,10 @@ def get_places():
     """Get all places function"""
     try:
         places = manipulate_data.get(entity_type)
-        if not places:
+        places_from_db = get_data_from_db("places")
+        if not places or not places_from_db:
             return jsonify([]), 200
-        return jsonify(list(places.keys())), 200
+        return jsonify(places_from_db.to_dict()), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -64,7 +67,8 @@ def get_place(id):
     """Get one place and return it"""
     try:
         place = manipulate_data.get(entity_type, id)
-        if not place:
+        place_from_db = get_data_from_db("places", id)
+        if not place or not place_from_db:
             return jsonify({"error": "Place not found"}), 404
 
         amenities = manipulate_data.get("amenities")
@@ -72,18 +76,24 @@ def get_place(id):
             linked_amenities = [amenity for amenity in amenities if amenity.get("id") in place.get("amenities")]
             place["linked_amenities"] = linked_amenities
         
-        return jsonify(place), 200
+        return jsonify(place_from_db.to_dict()), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
 
-def update_place(data, entity_id):
+def update_place(data, id):
     """Update a specific place"""
     try:
         request_data = data
-        manipulate_data.update(entity_type, request_data, request_data.get("host_id"), entity_id)
-        manipulate_data.update(entity_type, request_data, None, entity_id)
+        manipulate_data.update(entity_type, request_data, request_data.get("host_id"), id)
+        manipulate_data.update(entity_type, request_data, None, id)
+        place_from_db = get_data_from_db("places", id)
+        for key, value in data.keys():
+            for key_class, value_class in place_from_db.__dict__:
+                if key_class == key:
+                    place_from_db.key_class = value
+        place_from_db.save_to_db()
         
         return jsonify({"message": "Place updated successfully.", "updated": request_data}), 200
     except Exception as e:
@@ -95,6 +105,7 @@ def delete_place(id):
     """Delete a place"""
     try:
         response = manipulate_data.delete(entity_type, id)
+        get_data_from_db("places", id).delete_from_db()
         if response is None:
             return jsonify({"error": "Place not found"}), 404
         return jsonify(response), 200
