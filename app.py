@@ -17,7 +17,7 @@ config_map = {
     'PostgreSQLConfig': PostgreSQLConfig
 }
 
-"""Export environment variables to set the configuration"""
+"""Export environment variables to set the configuration in terminal"""
 # export FLASK_CONFIGURATION=SQLiteConfig
 # export FLASK_CONFIGURATION=PostgreSQLConfig
 
