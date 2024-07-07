@@ -4,6 +4,7 @@ from Model.review import Review
 from Model.user import User
 from Persistance.data_management import DataManager
 from datetime import datetime
+from RU_db import get_data_from_db
 
 
 
@@ -36,6 +37,7 @@ def create_review_for_place(review_data, place_id):
 
     # Save review
     data_manager.save('reviews', review.to_dict(), review.user_id, review.review_id)
+    review.save_to_db()
 
     return jsonify(review.to_dict()), 201
 
@@ -43,24 +45,28 @@ def create_review_for_place(review_data, place_id):
 def get_reviews_by_user(user_id):
     """Retrieve all reviews written by a specific user"""
     reviews = [review for review in data_manager.get('reviews').values() if review['user_id'] == user_id]
-    if not reviews:
+    review_from_db = get_data_from_db("review", user_id)
+    if not reviews or not review_from_db:
         abort(404, f'No reviews found for user ID {user_id}')
 
-    return jsonify(reviews), 200
+    return jsonify(review_from_db.to_dict()), 200
 
 def get_reviews_for_place(place_id):
     """Retrieve reviews for a specific place."""
     # Check if place exists
     place = data_manager.get('places', place_id)
-    if not place:
+    review_from_db = get_data_from_db("review", place_id)
+    if not place or not review_from_db:
         abort(404, f'Place with ID {place_id} not found')
+    return jsonify(review_from_db.to_dict())
 
 def get_review(review_id):
     review = data_manager.get('reviews', review_id)
-    if not review:
+    review_from_db = get_data_from_db("review", review_id)
+    if not review or not review_from_db:
         abort(404, f'Review with ID {review_id} not found')
 
-    return jsonify(review), 200
+    return jsonify(review_from_db.to_dict()), 200
 
 def update_review(review_data, review_id):
     # Validate input
@@ -77,7 +83,8 @@ def update_review(review_data, review_id):
 
     # Check if review exists
     review = data_manager.get('reviews', review_id)
-    if not review:
+    review_from_db = get_data_from_db("review", review_id)
+    if not review or review_from_db:
         abort(404, f'Review with ID {review_id} not found')
 
     # Ensure user cannot update other user's reviews
@@ -89,20 +96,27 @@ def update_review(review_data, review_id):
     review['rating'] = rating
     review['comment'] = comment
     review['updated_at'] = None
+    # review_from_db.user_id = user_id
+    review_from_db.rating = rating
+    review_from_db.comment = comment
 
     # Save updated review
     data_manager.update('reviews', review, review_id)
+    review_from_db.save_to_db()
 
-    return jsonify(review), 200
+    return jsonify(review_from_db.to_dict()), 200
 
 
 def delete_review(self, review_id):
     """Delete a specific review"""
     review = data_manager.get('reviews', review_id)
-    if not review:
+    review_from_db = get_data_from_db("review", review_id)
+    if not review or not review_from_db:
         abort(404, f'Review with ID {review_id} not found')
 
     data_manager.delete('reviews', review_id)
+    review_from_db.delete_from_db()
+    
 
     return '', 204
 
