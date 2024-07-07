@@ -9,6 +9,9 @@ from API.places_views import create_place, get_places, get_place, update_place, 
 from API.reviews_views import create_review_for_place, get_reviews_by_user, get_reviews_for_place, get_review, update_review, delete_review
 from config import SQLiteConfig, PostgreSQLConfig
 from create_app_db import db, init_db
+import secrets
+from RU_db import get_data_from_db
+from Permissions import user_permission, place_permission, review_permission
 
 config_name = os.getenv('FLASK_CONFIGURATION', 'SQLiteConfig')
 
@@ -34,6 +37,7 @@ init_db(app)
 if config_name == 'SQLiteConfig' and not os.path.exists("hbnb_db.sqlite3"):
     with app.app_context():
         db.create_all()
+
 # App index
 @app.route('/')
 def home():
@@ -55,48 +59,39 @@ def user():
 @app.route('/users', methods=['GET'])
 @jwt_required()
 def get_users():
-    claims = get_jwt()
-    role = claims.get("roles")
-
-    if "admin" in role:
-        return get_all_users()
-    return jsonify({"error": "No authorization !"})
-
+    result = user_permission(get_all_users)
+    return result
+    
 @app.route('/users/<user_id>', methods=['GET'])
 @jwt_required()
-def speicfic_user(user_id):
-    claims = get_jwt()
-    role = claims.get("roles")
-
-    if "admin" in role:
-        return get_specific_user(user_id)
-    return jsonify({"error": "No authorization !"})
+def specfic_user(user_id):
+    result = user_permission(get_specific_user, user_id)
+    return result 
     
-
 @app.route('/users/<user_id>', methods=['PUT'])
 @jwt_required()
 def up_user(user_id):
-    return update_user(user_id, request.get_json())
+    data = request.get_json()
+    result = user_permission(update_user, user_id, data)
+    return result
 
 @app.route('/users/<user_id>', methods=['DELETE'])
 @jwt_required()
 def del_user(user_id):
-    claims = get_jwt()
-    role = claims.get("roles")
-    jwt_id = get_jwt_identity()
-
-    if "admin" in role or jwt_id == user_id:
-        return delete_user(user_id)
+    result = user_permission(delete_user, user_id)
+    return result
 
 """
 Amenity routes
 """
 
 @app.route('/amenities', methods=['POST'])
+@jwt_required()
 def create_amenity_route():
     return create_amenity()
 
 @app.route('/amenities', methods=['GET'])
+@jwt_required()
 def get_amenities_route():
     return get_amenities()
 
@@ -156,24 +151,36 @@ places routes
 """
 
 @app.route('/places', methods=['POST'])
+@jwt_required()
 def create_place_route():
-    return create_place(request.get_json())
+    data = request.get_json()
+    result = place_permission(create_place, None, data)
+    return result
 
 @app.route('/places', methods=['GET'])
+@jwt_required()
 def get_places_route():
-    return get_places()
+    result = place_permission(get_places)
+    return result
 
 @app.route('/places/<string:place_id>', methods=['GET'])
+@jwt_required()
 def get_place_route(place_id):
-    return get_place(place_id)
+    result = place_permission(get_place, place_id)
+    return result
 
 @app.route('/places/<string:place_id>', methods=['PUT'])
+@jwt_required
 def update_place_route(place_id):
-    return update_place(request.get_json(), place_id)
+    data = request.get_json()
+    result = place_permission(update_place, place_id, data)
+    return result
 
 @app.route('/places/<string:place_id>', methods=['DELETE'])
+@jwt_required()
 def delete_place_route(place_id):
-    return delete_place(place_id)
+    result = place_permission(delete_place, place_id)
+    return result
 
 
 """
@@ -181,28 +188,44 @@ review routes
 """
 
 @app.route('/places/<place_id>/reviews', methods=['POST'])
+@jwt_required()
 def create_review_for_place_route(place_id):
-    return create_review_for_place(request.get_json(), place_id)
+    data = request.get_json()
+    result = review_permission(create_review_for_place, place_id, data)
+    return result
 
 @app.route('/users/<user_id>/reviews', methods=['GET'])
+@jwt_required()
 def get_reviews_by_user_route(user_id):
-    return get_reviews_by_user(request.get_json(), user_id)
+    data = request.get_json()
+    result = review_permission(get_reviews_by_user, None, data, user_id)
+    return result
 
 @app.route('/places/<place_id>/reviews', methods=['GET'])
+@jwt_required()
 def get_reviews_for_place_route(place_id):
-    return get_reviews_for_place(place_id)
+    result = review_permission(get_reviews_for_place, place_id)
+    return result
 
 @app.route('/reviews/<review_id>', methods=['GET'])
+@jwt_required()
 def get_review_route(review_id):
-    return get_review(review_id)
+    result = review_permission(get_review, None, None, None, review_id)
+    return result 
 
 @app.route('/reviews/<review_id>', methods=['PUT'])
+@jwt_required()
 def update_review_route(review_id):
-    return update_review(request.get_json(), review_id)
+    data = request.get_json()
+    result = review_permission(update_review, None, data, None, review_id)
+    return result
 
 @app.route('/reviews/<review_id>', methods=['DELETE'])
+@jwt_required()
 def delete_review_route(review_id):
-    return delete_review(review_id)
+    result = review_permission(delete_review, None, None, None, review_id)
+    return result
+
 
 
 if __name__ == "__main__":
