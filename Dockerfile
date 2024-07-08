@@ -27,4 +27,4 @@ VOLUME [ "$APP_HOME/data" ]
 EXPOSE $APP_PORT
 
 #Run the app using Ginicorn
-CMD ["sh", "-c", "gunicorn --bind 127.0.0.1:$APP_PORT wsgi.app"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
