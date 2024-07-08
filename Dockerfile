@@ -4,7 +4,7 @@ FROM python:3.9-alpine
 # Enviromental variables
 ENV PYTHONUNBUFFERED=1\
     APP_HOME=app\
-    APP_PORT=50000
+    APP_PORT=5000
 
 #The home directory of the app
 WORKDIR $APP_HOME
