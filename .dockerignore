@@ -1,0 +1,26 @@
+# Exclude version control system directories
+.git
+.svn
+
+# Exclude project-specific files and directories
+*.log
+*.cache
+*.env
+.dockerignore
+docker-compose.yml
+
+# Exclude development files
+__pycache__
+*.pyc
+
+# Exclude IDE/editor-specific files
+.vscode/
+.idea/
+
+# Exclude test directories or files
+tests/
+coverage/
+
+# Exclude documentation and other non-essential files
+docs/
+*.md/

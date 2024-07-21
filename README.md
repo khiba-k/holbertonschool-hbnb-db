@@ -31,9 +31,9 @@ Run the Docker container:
 
 sh
 Copy code
-docker run -d -p 50000:50000 holbertonschool-hbnb-db
+docker run -d -p 5000:5000 holbertonschool-hbnb-db
 Usage
-Once the container is running, you can access the application at http://localhost:50000.
+Once the container is running, you can access the application at http://localhost:5000.
 
 Project Structure
 bash
