@@ -96,14 +96,17 @@ def get_amenities_route():
     return get_amenities()
 
 @app.route('/amenities/<amenity_id>', methods=['GET'])
+@jwt_required()
 def get_amenity_route(amenity_id):
     return get_amenity(amenity_id)
 
 @app.route('/amenities/<amenity_id>', methods=['PUT'])
+@jwt_required()
 def update_amenity_route(amenity_id):
     return update_amenity(amenity_id)
 
 @app.route('/amenities/<amenity_id>', methods=['DELETE'])
+@jwt_required()
 def delete_amenity_route(amenity_id):
     return delete_amenity(amenity_id)
 
@@ -113,36 +116,44 @@ countries routes
 
 # Countries routes and paths
 @app.route('/countries', methods=['GET'])
+@jwt_required()
 def countries_route():
     return get_all_countries()
 
 @app.route('/countries/<country_code>', methods=['GET'])
+@jwt_required()
 def get_country_route(country_code):
     return get_country()
 
 @app.route('/countries/<country_code>/cities', methods=['GET'])
+@jwt_required()
 def get_country_cities_route(country_code):
     return get_country_cities(country_code)
 
 # City routes and paths
 
 @app.route('/cities', methods=['POST'])
+@jwt_required()
 def create_city_route(user_id):
     return create_city()
 
 @app.route('/cities', methods=['GET'])
+@jwt_required()
 def get_cities_route():
     return get_all_cities()
 
 @app.route('/cities/<city_id>', methods=['GET'])
+@jwt_required()
 def retrieve_city_route(city_id):
     return get_specific_city(city_id)
 
 @app.route('/cities/<city_id>', methods=['PUT'])
+@jwt_required()
 def update_city_route(city_id):
     return update_city()
 
 @app.route('/cities/<city_id>', methods=['DELETE'])
+@jwt_required()
 def del_city_route(city_id):
     return delete_city(city_id)
 
@@ -170,7 +181,7 @@ def get_place_route(place_id):
     return result
 
 @app.route('/places/<string:place_id>', methods=['PUT'])
-@jwt_required
+@jwt_required()
 def update_place_route(place_id):
     data = request.get_json()
     result = place_permission(update_place, place_id, data)

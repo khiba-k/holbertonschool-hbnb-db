@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from flask import jsonify
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, get_current_user, jwt_required, set_access_cookies, unset_jwt_cookies,create_access_token
+from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, create_access_token
 import sys
 import os
 import bcrypt
@@ -35,12 +35,9 @@ def user_login(data):
             admin = user.is_admin
             role_dict = {
             'roles': ['admin'] if admin else ['user']}
-            csrf_token = secrets.token_hex(16)
             access_token = create_access_token(identity=user.user_id, additional_claims=role_dict)
             response = jsonify({
-                "message": "Login successful",
-                "access_token": access_token,
-                "csrf_token": csrf_token
+                "message": "Login successful"
             })
             set_access_cookies(response, access_token)
             return response, 200
